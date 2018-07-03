@@ -1,5 +1,5 @@
 ---
-title: "Chapter_1"
+title: "Chapter 1"
 author: "Jens Christian Wahl"
 date: "3.7.2018"
 output: html_document
@@ -10,24 +10,66 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
-## Data Visualization with ggplot2
+# Data Visualization with ggplot2
 
 We will in this chapter focus on the dataset __mpg__, which contains data 38 models of cars. 
 We start out by plotting the relationship between a car's engine size (_displ_) and a car's fuel efficiency (_hwy_).
 ```{r,include = T}
 ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy))
 ```
+
 ## Exercises
 
 ### 3 
-The _drv_ variable describe if the car had four wheel drive, front weel drive or rear wheel drive
+The _drv_ variable describe if the car had four wheel drive, front wheel drive or rear wheel drive
 
 ### 4 - Make a scatterplot of _hwy_ vs. _cyl_
 
 ```{r, eval = FALSE}
 ggplot(data = mpg) + geom_point(x = cyl, y = hwy) 
 ```
-This will not be usefull due to the fact that _cyl_ is a catagorical variable. 
+This will not be useful due to the fact that _cyl_ is a categorical variable. 
+
+## Aesthetic Mappings
+
+We want to figure out what type of cars are in the lower right corner. 
+
+```{r}
+ggplot(data = mpg) + geom_point(mapping = aes(x=displ,y=hwy, color = class)) 
+```
+As we can see, they are all two seaters (sport cars). We use the `color = class` argument to map a unique color to each type of car. Notice the difference if we do it outside the `aes` block: 
+
+```{r}
+ggplot(data = mpg) + geom_point(mapping = aes(x = displ,y = hwy), color = "blue")
+```
+Thus, when putting the argument outside the `aes`, it does not give any information about the variables, but only the appearance of the `geom_point`.
+
+## Exercises 
+
+### 2 - Which variables of `mpg` are categorical? 
+
+All variables that are of type `chr` are factors.
+
+```{r}
+glimpse(mpg)
+```
+
+### 3 - Map a continuous variable to `color, size` and `shape`. 
+
+```{r}
+#color
+ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy, color = year))
+#size
+ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy, size = year))
+#shape - Does not work for continuous variables
+#ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy, shape = year))
+
+#Why so many black dots - Because we only have two years, 1999 and 2008
+mpg %>% arrange(year)
+```
+
+
+
 
 
 
