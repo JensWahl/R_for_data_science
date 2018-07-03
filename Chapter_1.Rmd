@@ -1,0 +1,35 @@
+---
+title: "Chapter 1"
+author: "Jens Christian Wahl"
+date: "3.7.2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Data Visualization with ggplot2
+
+We will in this chapter focus on the dataset __mpg__, which contains data 38 models of cars. 
+We start out by plotting the relationship between a car's engine size (_displ_) and a car's fuel efficiency (_hwy_).
+```{r,include = T}
+ggplot(data = mpg) + geom_point(mapping = aes(x = displ, y = hwy))
+```
+##Exercises
+
+### 3 
+The _drv_ variable describe if the car had four wheel drive, front weel drive or rear wheel drive
+
+### 4 - Make a scatterplot of _hwy_ vs. _cyl_
+
+```{r, eval = FALSE}
+ggplot(data = mpg) + geom_point(x = cyl, y = hwy) 
+```
+This will not be usefull due to the fact that _cyl_ is a catagorical variable. 
+
+
+
+
+
