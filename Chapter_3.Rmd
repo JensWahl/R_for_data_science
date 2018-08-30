@@ -1,0 +1,112 @@
+---
+title: "Chapter_3"
+author: "Jens Christian Wahl"
+date: "30 august 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(nycflights13)
+```
+
+
+```{r}
+flights <- flights
+head(flights)
+glimpse(flights)
+```
+## Filter rows with `filter()`
+
+```{r}
+flights %>% filter(month == 1, day %in% c(1,2))
+```
+
+## Exercises with `filter()`
+### Find all flights that: 
+
+
+```{r, results='hide'}
+#Arrival delay if two or more hours
+flights %>% filter(arr_delay > 120)
+
+#Flew to Houston (IAH or HOU)
+glimpse(flights %>% filter(dest %in% c("IAH","HOU")))
+
+#Were operated by United, American or Delta (UA, AA, DL)
+glimpse(flights %>% filter(carrier %in% c("UA", "AA", "DL")))
+
+#Departed in summer
+glimpse(flights %>% filter(month %in% 7:9))
+
+#Arrived more than two hours late but did not leave late
+glimpse(flights %>% filter(arr_delay >= 60 & dep_delay <= 0))
+
+#Delayed by at least one hour, but made up over 30 minutes in flight
+glimpse(flights %>% filter(dep_delay >= 60 & arr_delay <( dep_delay - 30)))
+
+#Departed between midnight and 5 a.m
+
+glimpse(flights %>% filter(dep_time == 2400 | dep_time <= 600))
+```
+
+### What does `between()` do? 
+
+The same as `x >= left & x <= right`. We could use if for 
+```{r, results = 'hide'}
+
+flights %>% filter(between(month,7,9))
+
+```
+### How many flights have missing `dep_time`? 
+
+```{r}
+flights %>% filter(is.na(dep_time))
+```
+
+
+These are canceled flights, since `arr_time`is missing. 
+
+##Exercises with `arrange()`
+
+### Sort all missing values to the top
+
+```{r}
+flights %>% arrange(desc(is.na(dep_time)), dep_time)
+```
+Note that `is.na()` returns a logical vector and `desc(TRUE) = -2, desc(FALSE) = -1`. That's why this works.
+
+### Sort `flights`to find the most delayed flights. Find the flights that left earliest. 
+
+```{r, results = 'hide'}
+#Most delayed
+flights %>% arrange(desc(dep_delay))
+
+#Left earliest
+flights %>% arrange(dep_delay)
+
+
+```
+### Sort flights to find the fastest flight 
+
+```{r}
+flights %>% arrange(air_time) %>% 
+  select(origin, dest, air_time) %>% 
+  head()
+```
+
+
+### Which flights traveled the longest? Which traveled the shortest? 
+
+```{r}
+flights %>% arrange(desc(distance)) %>%
+  select(origin, dest, distance) %>%
+  head()
+
+flights %>% arrange(distance) %>%
+  select(origin, dest, distance) %>%
+  head()
+```
+
+## Exercises for `select()`
