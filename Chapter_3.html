@@ -265,8 +265,8 @@ glimpse(flights %&gt;% filter(dep_time == 2400 | dep_time &lt;= 600))</code></pr
 ## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <p>Note that <code>is.na()</code> returns a logical vector and <code>desc(TRUE) = -2, desc(FALSE) = -1</code>. That’s why this works.</p>
 </div>
-<div id="sort-flightsto-find-the-most-delayed-flights.-find-the-flights-that-left-earliest." class="section level3">
-<h3>Sort <code>flights</code>to find the most delayed flights. Find the flights that left earliest.</h3>
+<div id="sort-flights-to-find-the-most-delayed-flights.-find-the-flights-that-left-earliest." class="section level3">
+<h3>Sort <code>flights</code> to find the most delayed flights. Find the flights that left earliest.</h3>
 <pre class="r"><code>#Most delayed
 flights %&gt;% arrange(desc(dep_delay))
 
@@ -318,6 +318,62 @@ flights %&gt;% arrange(dep_delay)</code></pre>
 </div>
 <div id="exercises-for-select" class="section level2">
 <h2>Exercises for <code>select()</code></h2>
+<div id="ways-to-select-dep_time-dep_delay-arr_time-arr_delay" class="section level3">
+<h3>Ways to select <code>dep_time, dep_delay, arr_time, arr_delay</code></h3>
+<pre class="r"><code>flights %&gt;% select(dep_time, dep_delay, arr_time, arr_delay)
+
+flights %&gt;% select(starts_with(&quot;dep_&quot;), starts_with(&quot;arr_&quot;))
+
+flights %&gt;% select(ends_with(&quot;time&quot;), ends_with(&quot;delay&quot;))</code></pre>
+<p><code>ends_with</code> does not work well since it returns several variables we are not interested in.</p>
+</div>
+<div id="what-does-one_ofdo" class="section level3">
+<h3>What does <code>one_of()</code>do?</h3>
+<p>Select variables based on a character vector instead of unquoted variable names.</p>
+<pre class="r"><code>flights %&gt;% select(one_of(c(&quot;year&quot;, &quot;month&quot;)))</code></pre>
+<pre><code>## # A tibble: 336,776 x 2
+##     year month
+##    &lt;int&gt; &lt;int&gt;
+##  1  2013     1
+##  2  2013     1
+##  3  2013     1
+##  4  2013     1
+##  5  2013     1
+##  6  2013     1
+##  7  2013     1
+##  8  2013     1
+##  9  2013     1
+## 10  2013     1
+## # ... with 336,766 more rows</code></pre>
+</div>
+<div id="does-the-result-of-running-the-following-code-surprise-you-how-do-the-select-helpers-deal-with-case-by-default-how-can-you-change-that-default" class="section level3">
+<h3>Does the result of running the following code surprise you? How do the select helpers deal with case by default? How can you change that default?</h3>
+<pre class="r"><code>flights %&gt;% select(contains(&quot;TIME&quot;))</code></pre>
+<pre><code>## # A tibble: 336,776 x 6
+##    dep_time sched_dep_time arr_time sched_arr_time air_time
+##       &lt;int&gt;          &lt;int&gt;    &lt;int&gt;          &lt;int&gt;    &lt;dbl&gt;
+##  1      517            515      830            819      227
+##  2      533            529      850            830      227
+##  3      542            540      923            850      160
+##  4      544            545     1004           1022      183
+##  5      554            600      812            837      116
+##  6      554            558      740            728      150
+##  7      555            600      913            854      158
+##  8      557            600      709            723       53
+##  9      557            600      838            846      140
+## 10      558            600      753            745      138
+## # ... with 336,766 more rows, and 1 more variable: time_hour &lt;dttm&gt;</code></pre>
+<p><code>contains()</code> does not care about upper or lower case letters. This can be changed by adding the argument <code>contains(&quot;TIME&quot;, ingnore.case = F)</code>.</p>
+</div>
+</div>
+<div id="exercises-for-mutate" class="section level2">
+<h2>Exercises for <code>mutate()</code></h2>
+<pre class="r"><code>#test
+flights_sml &lt;- flights %&gt;%
+  select(year:day,
+         ends_with(&quot;delay&quot;),
+         distance, 
+         air_time)</code></pre>
 </div>
 
 

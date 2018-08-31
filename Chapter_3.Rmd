@@ -77,7 +77,7 @@ flights %>% arrange(desc(is.na(dep_time)), dep_time)
 ```
 Note that `is.na()` returns a logical vector and `desc(TRUE) = -2, desc(FALSE) = -1`. That's why this works.
 
-### Sort `flights`to find the most delayed flights. Find the flights that left earliest. 
+### Sort `flights` to find the most delayed flights. Find the flights that left earliest. 
 
 ```{r, results = 'hide'}
 #Most delayed
@@ -110,3 +110,41 @@ flights %>% arrange(distance) %>%
 ```
 
 ## Exercises for `select()`
+
+### Ways to select `dep_time, dep_delay, arr_time, arr_delay`
+
+```{r, eval = FALSE}
+flights %>% select(dep_time, dep_delay, arr_time, arr_delay)
+
+flights %>% select(starts_with("dep_"), starts_with("arr_"))
+
+flights %>% select(ends_with("time"), ends_with("delay"))
+```
+`ends_with` does not work well since it returns several variables we are not interested in.
+
+### What does `one_of()`do? 
+
+Select variables based on a character vector instead of unquoted variable names.
+```{r}
+flights %>% select(one_of(c("year", "month")))
+```
+
+### Does the result of running the following code surprise you? How do the select helpers deal with case by default? How can you change that default?
+
+```{r}
+flights %>% select(contains("TIME"))
+```
+
+`contains()` does not care about upper or lower case letters. This can be changed by adding the argument `contains("TIME", ingnore.case = F)`.
+
+## Exercises for `mutate()`
+
+```{r}
+#test
+flights_sml <- flights %>%
+  select(year:day,
+         ends_with("delay"),
+         distance, 
+         air_time)
+```
+
