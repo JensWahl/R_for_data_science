@@ -24,7 +24,7 @@ flights %>% filter(month == 1, day %in% c(1,2))
 ```
 
 ## Exercises with `filter()`
-### Find all flights that: 
+#### Find all flights that: 
 
 
 ```{r, results='hide'}
@@ -51,7 +51,7 @@ glimpse(flights %>% filter(dep_delay >= 60 & arr_delay <( dep_delay - 30)))
 glimpse(flights %>% filter(dep_time == 2400 | dep_time <= 600))
 ```
 
-### What does `between()` do? 
+#### What does `between()` do? 
 
 The same as `x >= left & x <= right`. We could use if for 
 ```{r, results = 'hide'}
@@ -59,7 +59,7 @@ The same as `x >= left & x <= right`. We could use if for
 flights %>% filter(between(month,7,9))
 
 ```
-### How many flights have missing `dep_time`? 
+#### How many flights have missing `dep_time`? 
 
 ```{r}
 flights %>% filter(is.na(dep_time))
@@ -70,14 +70,14 @@ These are canceled flights, since `arr_time`is missing.
 
 ##Exercises with `arrange()`
 
-### Sort all missing values to the top
+#### Sort all missing values to the top
 
 ```{r}
 flights %>% arrange(desc(is.na(dep_time)), dep_time)
 ```
 Note that `is.na()` returns a logical vector and `desc(TRUE) = -2, desc(FALSE) = -1`. That's why this works.
 
-### Sort `flights` to find the most delayed flights. Find the flights that left earliest. 
+#### Sort `flights` to find the most delayed flights. Find the flights that left earliest. 
 
 ```{r, results = 'hide'}
 #Most delayed
@@ -88,7 +88,7 @@ flights %>% arrange(dep_delay)
 
 
 ```
-### Sort flights to find the fastest flight 
+#### Sort flights to find the fastest flight 
 
 ```{r}
 flights %>% arrange(air_time) %>% 
@@ -97,7 +97,7 @@ flights %>% arrange(air_time) %>%
 ```
 
 
-### Which flights traveled the longest? Which traveled the shortest? 
+#### Which flights traveled the longest? Which traveled the shortest? 
 
 ```{r}
 flights %>% arrange(desc(distance)) %>%
@@ -111,7 +111,7 @@ flights %>% arrange(distance) %>%
 
 ## Exercises for `select()`
 
-### Ways to select `dep_time, dep_delay, arr_time, arr_delay`
+#### Ways to select `dep_time, dep_delay, arr_time, arr_delay`
 
 ```{r, eval = FALSE}
 flights %>% select(dep_time, dep_delay, arr_time, arr_delay)
@@ -122,14 +122,14 @@ flights %>% select(ends_with("time"), ends_with("delay"))
 ```
 `ends_with` does not work well since it returns several variables we are not interested in.
 
-### What does `one_of()`do? 
+#### What does `one_of()`do? 
 
 Select variables based on a character vector instead of unquoted variable names.
 ```{r}
 flights %>% select(one_of(c("year", "month")))
 ```
 
-### Does the result of running the following code surprise you? How do the select helpers deal with case by default? How can you change that default?
+#### Does the result of running the following code surprise you? How do the select helpers deal with case by default? How can you change that default?
 
 ```{r}
 flights %>% select(contains("TIME"))
@@ -147,4 +147,59 @@ flights_sml <- flights %>%
          distance, 
          air_time)
 ```
+
+#### Convert `dep_time` and `sched_dep_time` to a more convenient representation of numbers of minutes since midnight. 
+
+```{r}
+flights %>% transmute(dep_time = (dep_time %/% 100)*60 + dep_time %% 100,
+                      sched_dep_time = (sched_dep_time %/% 100)*60 + dep_time %% 100)
+```
+
+#### Compare `air_time` with `arr_time - dep_time` 
+
+```{r}
+flights %>% transmute(air_time,
+                      diff_time = arr_time - dep_time)
+```
+
+We observed a difference because `arr_time` and `dep_time` are not on the format of minutes since midnight. We can fix it in the following way: 
+
+```{r}
+time2mins <- function(t){
+  #Trasforms timepoint to minuttes since midnight
+  (t %/% 100 * 60 + t %% 100) %% 1440
+}
+
+flights %>% transmute(air_time,
+                      arr_time = time2mins(arr_time),
+                      dep_time = time2mins(dep_time),
+                      air_time2 = arr_time - dep_time, 
+                      diff = air_time - air_time2)
+```
+#### Compare `dep_time, sched_dep_time, dep_delay`
+
+```{r}
+flights_sml <- flights %>%
+  select(dep_time, sched_dep_time, dep_delay)
+
+flights_sml %>% transmute(dep_time = time2mins(dep_time),
+                       sched_dep_time = time2mins(sched_dep_time),
+                       dep_delay,
+                       diff_time = dep_time - (sched_dep_time + dep_delay))
+
+
+```
+#### Find the 10 most delayed flights using a ranking function.
+
+```{r}
+flights_delayed <- flights %>% mutate(dep_delayed_rank = min_rank(desc(dep_delay)))
+flights_delayed %>% filter(dep_delayed_rank <= 10) %>% arrange(dep_delayed_rank)
+
+```
+
+
+
+#### 1:3 + 1:10
+
+R recycles the shortest vector.
 

@@ -189,8 +189,8 @@ head(flights)</code></pre>
 </div>
 <div id="exercises-with-filter" class="section level2">
 <h2>Exercises with <code>filter()</code></h2>
-<div id="find-all-flights-that" class="section level3">
-<h3>Find all flights that:</h3>
+<div id="find-all-flights-that" class="section level4">
+<h4>Find all flights that:</h4>
 <pre class="r"><code>#Arrival delay if two or more hours
 flights %&gt;% filter(arr_delay &gt; 120)
 
@@ -213,13 +213,13 @@ glimpse(flights %&gt;% filter(dep_delay &gt;= 60 &amp; arr_delay &lt;( dep_delay
 
 glimpse(flights %&gt;% filter(dep_time == 2400 | dep_time &lt;= 600))</code></pre>
 </div>
-<div id="what-does-between-do" class="section level3">
-<h3>What does <code>between()</code> do?</h3>
+<div id="what-does-between-do" class="section level4">
+<h4>What does <code>between()</code> do?</h4>
 <p>The same as <code>x &gt;= left &amp; x &lt;= right</code>. We could use if for</p>
 <pre class="r"><code>flights %&gt;% filter(between(month,7,9))</code></pre>
 </div>
-<div id="how-many-flights-have-missing-dep_time" class="section level3">
-<h3>How many flights have missing <code>dep_time</code>?</h3>
+<div id="how-many-flights-have-missing-dep_time" class="section level4">
+<h4>How many flights have missing <code>dep_time</code>?</h4>
 <pre class="r"><code>flights %&gt;% filter(is.na(dep_time))</code></pre>
 <pre><code>## # A tibble: 8,255 x 19
 ##     year month   day dep_time sched_dep_time dep_delay arr_time
@@ -243,8 +243,8 @@ glimpse(flights %&gt;% filter(dep_time == 2400 | dep_time &lt;= 600))</code></pr
 </div>
 <div id="exercises-with-arrange" class="section level2">
 <h2>Exercises with <code>arrange()</code></h2>
-<div id="sort-all-missing-values-to-the-top" class="section level3">
-<h3>Sort all missing values to the top</h3>
+<div id="sort-all-missing-values-to-the-top" class="section level4">
+<h4>Sort all missing values to the top</h4>
 <pre class="r"><code>flights %&gt;% arrange(desc(is.na(dep_time)), dep_time)</code></pre>
 <pre><code>## # A tibble: 336,776 x 19
 ##     year month   day dep_time sched_dep_time dep_delay arr_time
@@ -265,16 +265,16 @@ glimpse(flights %&gt;% filter(dep_time == 2400 | dep_time &lt;= 600))</code></pr
 ## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 <p>Note that <code>is.na()</code> returns a logical vector and <code>desc(TRUE) = -2, desc(FALSE) = -1</code>. That’s why this works.</p>
 </div>
-<div id="sort-flights-to-find-the-most-delayed-flights.-find-the-flights-that-left-earliest." class="section level3">
-<h3>Sort <code>flights</code> to find the most delayed flights. Find the flights that left earliest.</h3>
+<div id="sort-flights-to-find-the-most-delayed-flights.-find-the-flights-that-left-earliest." class="section level4">
+<h4>Sort <code>flights</code> to find the most delayed flights. Find the flights that left earliest.</h4>
 <pre class="r"><code>#Most delayed
 flights %&gt;% arrange(desc(dep_delay))
 
 #Left earliest
 flights %&gt;% arrange(dep_delay)</code></pre>
 </div>
-<div id="sort-flights-to-find-the-fastest-flight" class="section level3">
-<h3>Sort flights to find the fastest flight</h3>
+<div id="sort-flights-to-find-the-fastest-flight" class="section level4">
+<h4>Sort flights to find the fastest flight</h4>
 <pre class="r"><code>flights %&gt;% arrange(air_time) %&gt;% 
   select(origin, dest, air_time) %&gt;% 
   head()</code></pre>
@@ -288,8 +288,8 @@ flights %&gt;% arrange(dep_delay)</code></pre>
 ## 5 EWR    BDL         21
 ## 6 EWR    PHL         21</code></pre>
 </div>
-<div id="which-flights-traveled-the-longest-which-traveled-the-shortest" class="section level3">
-<h3>Which flights traveled the longest? Which traveled the shortest?</h3>
+<div id="which-flights-traveled-the-longest-which-traveled-the-shortest" class="section level4">
+<h4>Which flights traveled the longest? Which traveled the shortest?</h4>
 <pre class="r"><code>flights %&gt;% arrange(desc(distance)) %&gt;%
   select(origin, dest, distance) %&gt;%
   head()</code></pre>
@@ -318,8 +318,8 @@ flights %&gt;% arrange(dep_delay)</code></pre>
 </div>
 <div id="exercises-for-select" class="section level2">
 <h2>Exercises for <code>select()</code></h2>
-<div id="ways-to-select-dep_time-dep_delay-arr_time-arr_delay" class="section level3">
-<h3>Ways to select <code>dep_time, dep_delay, arr_time, arr_delay</code></h3>
+<div id="ways-to-select-dep_time-dep_delay-arr_time-arr_delay" class="section level4">
+<h4>Ways to select <code>dep_time, dep_delay, arr_time, arr_delay</code></h4>
 <pre class="r"><code>flights %&gt;% select(dep_time, dep_delay, arr_time, arr_delay)
 
 flights %&gt;% select(starts_with(&quot;dep_&quot;), starts_with(&quot;arr_&quot;))
@@ -327,8 +327,8 @@ flights %&gt;% select(starts_with(&quot;dep_&quot;), starts_with(&quot;arr_&quot
 flights %&gt;% select(ends_with(&quot;time&quot;), ends_with(&quot;delay&quot;))</code></pre>
 <p><code>ends_with</code> does not work well since it returns several variables we are not interested in.</p>
 </div>
-<div id="what-does-one_ofdo" class="section level3">
-<h3>What does <code>one_of()</code>do?</h3>
+<div id="what-does-one_ofdo" class="section level4">
+<h4>What does <code>one_of()</code>do?</h4>
 <p>Select variables based on a character vector instead of unquoted variable names.</p>
 <pre class="r"><code>flights %&gt;% select(one_of(c(&quot;year&quot;, &quot;month&quot;)))</code></pre>
 <pre><code>## # A tibble: 336,776 x 2
@@ -346,8 +346,8 @@ flights %&gt;% select(ends_with(&quot;time&quot;), ends_with(&quot;delay&quot;))
 ## 10  2013     1
 ## # ... with 336,766 more rows</code></pre>
 </div>
-<div id="does-the-result-of-running-the-following-code-surprise-you-how-do-the-select-helpers-deal-with-case-by-default-how-can-you-change-that-default" class="section level3">
-<h3>Does the result of running the following code surprise you? How do the select helpers deal with case by default? How can you change that default?</h3>
+<div id="does-the-result-of-running-the-following-code-surprise-you-how-do-the-select-helpers-deal-with-case-by-default-how-can-you-change-that-default" class="section level4">
+<h4>Does the result of running the following code surprise you? How do the select helpers deal with case by default? How can you change that default?</h4>
 <pre class="r"><code>flights %&gt;% select(contains(&quot;TIME&quot;))</code></pre>
 <pre><code>## # A tibble: 336,776 x 6
 ##    dep_time sched_dep_time arr_time sched_arr_time air_time
@@ -374,6 +374,72 @@ flights_sml &lt;- flights %&gt;%
          ends_with(&quot;delay&quot;),
          distance, 
          air_time)</code></pre>
+<div id="convert-dep_time-and-sched_dep_time-to-a-more-convenient-representation-of-numbers-of-minutes-since-midnight." class="section level4">
+<h4>Convert <code>dep_time</code> and <code>sched_dep_time</code> to a more convenient representation of numbers of minutes since midnight.</h4>
+<pre class="r"><code>flights %&gt;% transmute(dep_time = (dep_time %/% 100)*60 + dep_time %% 100,
+                      sched_dep_time = (sched_dep_time %/% 100)*60 + dep_time %% 100)</code></pre>
+<pre><code>## # A tibble: 336,776 x 2
+##    dep_time sched_dep_time
+##       &lt;dbl&gt;          &lt;dbl&gt;
+##  1      317            317
+##  2      333            333
+##  3      342            342
+##  4      344            344
+##  5      354            414
+##  6      354            354
+##  7      355            415
+##  8      357            417
+##  9      357            417
+## 10      358            418
+## # ... with 336,766 more rows</code></pre>
+</div>
+<div id="compare-air_time-with-arr_time---dep_time" class="section level4">
+<h4>Compare <code>air_time</code> with <code>arr_time - dep_time</code></h4>
+<pre class="r"><code>flights %&gt;% transmute(air_time,
+                      diff_time = arr_time - dep_time)</code></pre>
+<pre><code>## # A tibble: 336,776 x 2
+##    air_time diff_time
+##       &lt;dbl&gt;     &lt;int&gt;
+##  1      227       313
+##  2      227       317
+##  3      160       381
+##  4      183       460
+##  5      116       258
+##  6      150       186
+##  7      158       358
+##  8       53       152
+##  9      140       281
+## 10      138       195
+## # ... with 336,766 more rows</code></pre>
+<p>We observed a difference because <code>arr_time</code> and <code>dep_time</code> are not on the format of minutes since midnight. We can fix it in the following way:</p>
+<pre class="r"><code>time2mins &lt;- function(t){
+  #Trasforms timepoint to minuttes since midnight
+  (t %/% 100 * 60 + t %% 100) %% 1440
+}
+
+flights %&gt;% transmute(air_time,
+                      arr_time = time2mins(arr_time),
+                      dep_time = time2mins(dep_time),
+                      air_time2 = arr_time - dep_time, 
+                      diff = air_time - air_time2)</code></pre>
+<pre><code>## # A tibble: 336,776 x 5
+##    air_time arr_time dep_time air_time2  diff
+##       &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;
+##  1      227      510      317       193    34
+##  2      227      530      333       197    30
+##  3      160      563      342       221   -61
+##  4      183      604      344       260   -77
+##  5      116      492      354       138   -22
+##  6      150      460      354       106    44
+##  7      158      553      355       198   -40
+##  8       53      429      357        72   -19
+##  9      140      518      357       161   -21
+## 10      138      473      358       115    23
+## # ... with 336,766 more rows</code></pre>
+</div>
+<div id="compare-dep_time-sched_dep_time-dep_delay" class="section level4">
+<h4>Compare <code>dep_time, sched_dep_time, dep_delay</code></h4>
+</div>
 </div>
 
 
