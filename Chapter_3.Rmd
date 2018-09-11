@@ -191,6 +191,8 @@ flights_sml %>% transmute(dep_time = time2mins(dep_time),
 ```
 #### Find the 10 most delayed flights using a ranking function.
 
+`min_rank` will give rank in an increasing order, i.e. the lowest value will have rank 1. `min_rank(desc())` changes the sign of the variable and thus gives rank in a decreasing order.
+
 ```{r}
 flights_delayed <- flights %>% mutate(dep_delayed_rank = min_rank(desc(dep_delay)))
 flights_delayed %>% filter(dep_delayed_rank <= 10) %>% arrange(dep_delayed_rank)
@@ -202,4 +204,41 @@ flights_delayed %>% filter(dep_delayed_rank <= 10) %>% arrange(dep_delayed_rank)
 #### 1:3 + 1:10
 
 R recycles the shortest vector.
+
+## Excercises for `summarize()` 
+
+#### Come up with another approach that will give you the same output as `not_cancelled %>% count(dest)` and `not_cancelled %>% count(tailnum, wt = distance)` (without using `count()`)
+
+```{r}
+not_cancelled <- flights %>% 
+  filter(!is.na(dep_delay), !is.na(arr_delay))
+
+not_cancelled %>% group_by(dest) %>% summarise(n = n()) %>% arrange(desc(n))
+
+not_cancelled %>% group_by(tailnum) %>% summarize(n = sum(distance))
+
+
+```
+
+#### Look at the number of canceled flights per day. Is there a pattern? Is the proportion of canceled flights related to the average delay?
+
+```{r}
+cancelled <- flights %>% 
+  mutate(cancelled = is.na(dep_delay) | is.na(arr_delay)) %>% 
+  group_by(year, month, day) %>% 
+  summarise(prop_cancelled = mean(cancelled),
+            avg_dep_delay = mean(dep_delay, na.rm = T))
+
+
+cancelled %>% ggplot(aes(x = avg_dep_delay, y = prop_cancelled)) + 
+  geom_point() + geom_smooth()
+```
+Days that have big delays also have a higher proportion on cancelled flights. 
+
+#### Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about `flights %>% group_by(carrier, dest) %>% summarise(n())`)
+
+```{r}
+#Worst carriers
+
+```
 
