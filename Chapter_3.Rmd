@@ -239,6 +239,38 @@ Days that have big delays also have a higher proportion on cancelled flights.
 
 ```{r}
 #Worst carriers
+colnames(flights)
+flights %>% group_by(carrier) %>%
+  summarise(delay = mean(arr_delay, na.rm = T)) %>% 
+  arrange(desc(delay))
 
+airlines %>% filter(carrier %in% c("F9", "EV", "YV"))
+
+flights %>% 
+  group_by(carrier, dest) %>% 
+  summarise(n = n(),
+            delay = mean(arr_delay, na.rm = T)) %>% 
+  arrange(desc(n))
+```
+
+A nice way to attach mean by group to the original data frame: 
+
+```{r}
+
+flights2 <- flights %>% 
+  group_by(carrier) %>% 
+  mutate(delay_carrier = mean(arr_delay, na.rm = T))
+
+head(flights2)
+
+```
+
+#### For each plane, count the number of flights before the first delay of greater than one hour.
+
+```{r}
+flights %>% 
+  group_by(flight) %>% 
+  summarise(n_delay = sum(arr_delay > 60, na.rm = T)) %>% 
+  arrange(desc(n_delay))
 ```
 
