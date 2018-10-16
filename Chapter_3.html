@@ -602,24 +602,48 @@ colnames(flights)</code></pre>
 <p>A nice way to attach mean by group to the original data frame:</p>
 <pre class="r"><code>flights2 &lt;- flights %&gt;% 
   group_by(carrier) %&gt;% 
-  summarise(delay_carrier = mean(arr_delay, na.rm = T)) %&gt;% 
-  left_join(flights, by = &quot;carrier&quot;)
+  mutate(delay_carrier = mean(arr_delay, na.rm = T))
 
 head(flights2)</code></pre>
 <pre><code>## # A tibble: 6 x 20
-##   carrier delay_carrier  year month   day dep_time sched_dep_time dep_delay
-##   &lt;chr&gt;           &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
-## 1 9E               7.38  2013     1     1      810            810         0
-## 2 9E               7.38  2013     1     1     1451           1500        -9
-## 3 9E               7.38  2013     1     1     1452           1455        -3
-## 4 9E               7.38  2013     1     1     1454           1500        -6
-## 5 9E               7.38  2013     1     1     1507           1515        -8
-## 6 9E               7.38  2013     1     1     1530           1530         0
-## # ... with 12 more variables: arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;,
-## #   arr_delay &lt;dbl&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
-## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
-## #   time_hour &lt;dttm&gt;</code></pre>
+## # Groups:   carrier [4]
+##    year month   day dep_time sched_dep_time dep_delay arr_time
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+## 1  2013     1     1      517            515         2      830
+## 2  2013     1     1      533            529         4      850
+## 3  2013     1     1      542            540         2      923
+## 4  2013     1     1      544            545        -1     1004
+## 5  2013     1     1      554            600        -6      812
+## 6  2013     1     1      554            558        -4      740
+## # ... with 13 more variables: sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
+## #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+## #   time_hour &lt;dttm&gt;, delay_carrier &lt;dbl&gt;</code></pre>
 </div>
+<div id="for-each-plane-count-the-number-of-flights-before-the-first-delay-of-greater-than-one-hour." class="section level4">
+<h4>For each plane, count the number of flights before the first delay of greater than one hour.</h4>
+<pre class="r"><code>flights %&gt;% 
+  group_by(flight) %&gt;% 
+  summarise(n_delay = sum(arr_delay &gt; 60, na.rm = T)) %&gt;% 
+  arrange(desc(n_delay))</code></pre>
+<pre><code>## # A tibble: 3,844 x 2
+##    flight n_delay
+##     &lt;int&gt;   &lt;int&gt;
+##  1    527      91
+##  2    415      88
+##  3   4131      86
+##  4    695      80
+##  5   4333      80
+##  6    985      76
+##  7    359      75
+##  8    257      74
+##  9   4543      74
+## 10     29      70
+## # ... with 3,834 more rows</code></pre>
+</div>
+</div>
+<div id="exercises-for-grouped-mutates" class="section level2">
+<h2>Exercises for <code>Grouped mutates</code></h2>
 </div>
 
 

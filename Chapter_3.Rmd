@@ -274,3 +274,25 @@ flights %>%
   arrange(desc(n_delay))
 ```
 
+## Exercises for `Grouped mutates`
+
+#### Which plane (tailnum) has the worst on-time record
+
+We will define on-time record as proportion of flights not delayed or canceled
+
+```{r}
+flights %>% 
+  filter(!is.na(arr_delay)) %>%
+  mutate(canceled = is.na(arr_time),
+         is_late = !canceled & arr_delay > 0) %>%
+  group_by(tailnum) %>% 
+  summarise(n = n(), 
+             n_canceled = sum(canceled),
+            n_late = sum(is_late),
+            prop_late_canceled = (n_canceled + n_late) / n
+             ) %>%
+arrange(desc(prop_late_canceled))
+
+```
+
+
